@@ -48,7 +48,7 @@ namespace Com_Methods
                     var Excel_WR = new Excel_Reader_Writer();
                     
                     //плотная матрица из файла Excel
-                    var A = Excel_WR.Read_Matrix("C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Excel_Data\\6.xlsx");
+                    var A = Excel_WR.Read_Matrix("C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Excel_Data\\3.xlsx");
 
                    
 
@@ -77,13 +77,14 @@ namespace Com_Methods
                     Console.WriteLine("\n|det(A)| = " + SVD.Abs_Det());
 
                     //число обусловленности
-                    Console.WriteLine("\nCondSVD(A) = " + SVD.Cond());
+                    //  Console.WriteLine("\nCondSVD(A) = " + SVD.Cond());
 
                     //число обусловленности
-                    Console.WriteLine("\nCond2(A) = " + A.Cond_Square_Matrix_Parallel());
+                    // Console.WriteLine("\nCond2(A) = " + A.Cond_Square_Matrix_Parallel());
 
                     //число обусловленности
-                    Console.WriteLine("\nCondInfinity(A) = " + A.Cond_InfinityNorm());
+                    // Console.WriteLine("\nCondInfinity(A) = " + A.Cond_InfinityNorm());
+
                     //решение СЛАУ
                     var X_True = new Vector(A.N);
                     for (int i = 0; i < A.N; i++) X_True.Elem[i] = 1.0;
@@ -93,6 +94,8 @@ namespace Com_Methods
                     foreach (var el in X.Elem) Console.WriteLine(el);
                     //норма невязки ||Ax - f||
                     Console.WriteLine("\nRelative_Discrepancy: {0}", Tools.Relative_Discrepancy(A, X, F));
+
+                    
                 });
 
                 //время работы программы
