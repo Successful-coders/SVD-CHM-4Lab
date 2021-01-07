@@ -58,80 +58,70 @@ namespace Com_Methods
             }
         }
 
-        // метод зануления j-го столбца с i-ой позиции
-        public static void Column_Transformation(Matrix A, Matrix U, int j, int i)
+        /// метод зануления i-го столбца с j-ой позиции
+        public static void Column_Transformation(Matrix A, Matrix U, int i1, int j)
         {
             double help1, help2;
-
             //косинус, синус
             double c = 0, s = 0;
-
             //просматриваем строки в столбце
-            for (int q = i; q < A.M; q++)
+            for (int I = j + 1; I < A.M; I++)
             {
                 //если очередной элемент под диагональю не нулевой, то требуется поворот вектора
-                if (Math.Abs(A.Elem[q][j]) > CONST.EPS)
+                if (Math.Abs(A.Elem[I][i1]) > CONST.EPS)
                 {
-                    help1 = Math.Sqrt(Math.Pow(A.Elem[q][j], 2) + Math.Pow(A.Elem[j][j], 2));
-                    c = A.Elem[j][j] / help1;
-                    s = A.Elem[q][j] / help1;
-
+                    help1 = Math.Sqrt(Math.Pow(A.Elem[I][i1], 2) + Math.Pow(A.Elem[j][j], 2));
+                    c = A.Elem[j][i1] / help1;
+                    s = A.Elem[I][i1] / help1;
                     //A_new = Gt * A
                     for (int k = j; k < A.N; k++)
                     {
-                        help1 = c * A.Elem[j][k] + s * A.Elem[q][k];
-                        help2 = c * A.Elem[q][k] - s * A.Elem[j][k];
+                        help1 = c * A.Elem[j][k] + s * A.Elem[j + 1][k];
+                        help2 = c * A.Elem[j + 1][k] - s * A.Elem[j][k];
                         A.Elem[j][k] = help1;
-                        A.Elem[q][k] = help2;
+                        A.Elem[j + 1][k] = help2;
                     }
-
-                    //перемножаем строки матрицы Q на трансп.матрицу преобразования Q = Q * G
+                    //ищём U
                     for (int k = 0; k < U.M; k++)
                     {
-                        help1 = c * U.Elem[k][j] + s * U.Elem[k][q];
-                        help2 = c * U.Elem[k][q] - s * U.Elem[k][j];
+                        help1 = c * U.Elem[k][j] + s * U.Elem[k][j + 1];
+                        help2 = c * U.Elem[k][j + 1] - s * U.Elem[k][j];
                         U.Elem[k][j] = help1;
-                        U.Elem[k][q] = help2;
+                        U.Elem[k][j + 1] = help2;
                     }
                 }
             }
         }
-
-        // метод зануления i-ой строки с j-ой позиции
-        public static void Row_Transformation(Matrix A, Matrix V, int i, int j1)
+        /// метод зануления i-ой строки с j-ой позиции
+        public static void Row_Transformation(Matrix A, Matrix V, int i1, int j)
         {
             double help1, help2;
-
             //косинус, синус
             double c = 0, s = 0;
-
-            //Ыалгоритм вращения Гивенса: для каждого столбца
-            for (int j = j1 + 1; j < A.N; j++)
+            //просматриваем столбцы в строке
+            for (int I = j + 1; I < A.N; I++)
             {
-
-                //если очередной элемент под диагональю не нулевой, то требуется поворот вектора
-                if (Math.Abs(A.Elem[i][j]) > CONST.EPS)
+                //если очередной элемент над диагональю не нулевой, то требуется поворот вектора
+                if (Math.Abs(A.Elem[i1][I]) > CONST.EPS)
                 {
-                    help1 = Math.Sqrt(Math.Pow(A.Elem[i][j], 2) + Math.Pow(A.Elem[j][j], 2));
-                    c = A.Elem[j][j] / help1;
-                    s = A.Elem[i][j] / help1;
-
-                    //A_new = Gt * A
+                    help1 = Math.Sqrt(Math.Pow(A.Elem[i1][I], 2) + Math.Pow(A.Elem[i1][i1], 2));
+                    c = A.Elem[i1][i1] / help1;
+                    s = -A.Elem[i1][I] / help1;
+                    //A_new = A * Gt
                     for (int k = j; k < A.N; k++)
                     {
-                        help1 = c * A.Elem[j][k] + s * A.Elem[i][k];
-                        help2 = c * A.Elem[i][k] - s * A.Elem[j][k];
-                        A.Elem[j][k] = help1;
-                        A.Elem[i][k] = help2;
+                        help1 = c * A.Elem[k][j] - s * A.Elem[k][j + 1];
+                        help2 = c * A.Elem[k][j + 1] + s * A.Elem[k][j];
+                        A.Elem[k][j] = help1;
+                        A.Elem[k][j + 1] = help2;
                     }
-
-                    //перемножаем строки матрицы Q на трансп.матрицу преобразования Q = Q * G
+                    //ищем V
                     for (int k = 0; k < V.M; k++)
                     {
-                        help1 = c * V.Elem[k][j] + s * V.Elem[k][i];
-                        help2 = c * V.Elem[k][i] - s * V.Elem[k][j];
+                        help1 = c * V.Elem[k][j] - s * V.Elem[k][j + 1];
+                        help2 = c * V.Elem[k][j + 1] + s * V.Elem[k][j];
                         V.Elem[k][j] = help1;
-                        V.Elem[k][i] = help2;
+                        V.Elem[k][j + 1] = help2;
                     }
                 }
             }

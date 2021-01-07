@@ -50,7 +50,7 @@ namespace Com_Methods
                     var Excel_WR = new Excel_Reader_Writer();
                     
                     //плотная матрица из файла Excel
-                    var A = Excel_WR.Read_Matrix("C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Excel_Data\\6.xlsx");
+                    var A = Excel_WR.Read_Matrix("C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Excel_Data\\2a.xlsx");
 
 
 
@@ -60,7 +60,7 @@ namespace Com_Methods
                     //Binary_Reader_Writer.Save_Object(A, "C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Original.bin");
 
                     var SVD = new SVD(A);
-                    SVD.Reduction_SVD(0.60);
+                    SVD.Reduction_SVD(1e-15);
 
                     Matrix Res = SVD.U * SVD.Sigma * SVD.V.Transpose_Matrix();
                    // Excel_WR.Write_Matrix(SVD.U * SVD.Sigma * SVD.V.Transpose_Matrix(), "Compression Matrix");
@@ -97,7 +97,7 @@ namespace Com_Methods
                     //Console.WriteLine("\n|det(A)| = " + SVD.Abs_Det());
 
                     //число обусловленности
-                    //  Console.WriteLine("\nCondSVD(A) = " + SVD.Cond());
+                      Console.WriteLine("\nCond(A) = " + SVD.Cond());
 
                     //число обусловленности
                     // Console.WriteLine("\nCond2(A) = " + A.Cond_Square_Matrix_Parallel());
