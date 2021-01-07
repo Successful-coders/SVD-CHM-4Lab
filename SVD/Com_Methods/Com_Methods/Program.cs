@@ -48,7 +48,7 @@ namespace Com_Methods
                     var Excel_WR = new Excel_Reader_Writer();
                     
                     //плотная матрица из файла Excel
-                    var A = Excel_WR.Read_Matrix("C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Excel_Data\\1.xlsx");
+                    var A = Excel_WR.Read_Matrix("C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\Excel_Data\\6.xlsx");
 
                    
 
