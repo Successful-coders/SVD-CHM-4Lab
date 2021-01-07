@@ -109,7 +109,7 @@ namespace Com_Methods
         }
 
         //---------------------------------------------------------------------------------------------
-
+        
         /// <summary>
         /// двухэтапный SVD-алгоритм
         /// </summary>
@@ -135,7 +135,12 @@ namespace Com_Methods
             for (int i = 0; i < A.M; i++)
             {
                 U.Elem[i][i] = 1.0;
-                for (int j = 0; j < A.N; j++) Sigma.Elem[i][j] = A.Elem[i][j];
+                for (int j = 0; j < A.N; j++)
+                {
+                    if (A.Elem[i][j]<0.5)
+                        A.Elem[i][j] = 0.0;
+                    Sigma.Elem[i][j] = A.Elem[i][j];
+                }
             }
             for (int i = 0; i < A.N; i++) V.Elem[i][i] = 1.0;
 
@@ -260,13 +265,15 @@ namespace Com_Methods
                         Sort_Singular_Values();
                         break;
                     }
-
             }
         }
            
     
         //---------------------------------------------------------------------------------------------
+        public void StartSVDExhaustion(Matrix A)
+        {
 
+        }
         //ранг матрицы
         public int Rank()
         {

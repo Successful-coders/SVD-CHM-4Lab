@@ -20,6 +20,17 @@ namespace Com_Methods
             }
         }
 
+        public static void Save_ObjectThree(Object Obj1, Object Obj2, Object Obj3, string PATH)
+        {
+            BinaryFormatter binFormat = new BinaryFormatter();
+            using (Stream fStream = new FileStream(PATH, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                binFormat.Serialize(fStream, Obj1);
+                binFormat.Serialize(fStream, Obj2);
+                binFormat.Serialize(fStream, Obj3);
+            }
+        }
+
         /// <summary>
         /// десериализация объекта
         /// вернёт объект из файла
