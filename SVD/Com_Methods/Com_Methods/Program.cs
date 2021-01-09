@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -78,42 +79,50 @@ namespace Com_Methods
                     
                    // Binary_Reader_Writer.Save_ObjectThree(SVD.Sigma, SVD.U, SVD.V, "C:\\Users\\Жопчики\\Desktop\\Даша\\projects-with-git\\чм 4 лаба\\SVD\\Com_Methods\\Com_Methods\\Data\\SVD.bin");
 
-                    //Console.WriteLine("\nMatrix U:");
-                    //SVD.U.Console_Write_Matrix();
+                    Console.WriteLine("\nMatrix U:");
+                    SVD.U.Console_Write_Matrix();
 
-                    //Console.WriteLine("\nMatrix Sigma (size {0}):", SVD.Sigma.M);
-                    //for(int i = 0; i < SVD.Sigma.M; i++) Console.WriteLine(SVD.Sigma.Elem[i][i]);
+                    Console.WriteLine("\nMatrix Sigma (size {0}):", SVD.Sigma.M);
+                    for(int i = 0; i < SVD.Sigma.M; i++) Console.WriteLine(SVD.Sigma.Elem[i][i]);
 
-                    //Console.WriteLine("\nMatrix V:");
-                    //SVD.V.Console_Write_Matrix();
+                    Console.WriteLine("\nMatrix V:");
+                    SVD.V.Console_Write_Matrix();
 
-                    //Console.WriteLine("\nMatrix A = U * Sigma * Vt:");
-                    //(SVD.U * SVD.Sigma * SVD.V.Transpose_Matrix()).Console_Write_Matrix();
+                    Console.WriteLine("\nMatrix A = U * Sigma * Vt:");
+                    (SVD.U * SVD.Sigma * SVD.V.Transpose_Matrix()).Console_Write_Matrix();
 
-                    ////ранг матрицы
-                    //Console.WriteLine("\nrk(A) = " + SVD.Rank());
+                    //ранг матрицы
+                    Console.WriteLine("\nrk(A) = " + SVD.Rank());
 
-                    ////определитель матрицы
-                    //Console.WriteLine("\n|det(A)| = " + SVD.Abs_Det());
+                    //определитель матрицы
+                    Console.WriteLine("\n|det(A)| = " + SVD.Abs_Det());
 
+                   // число обусловленности
+                    Console.WriteLine("\nCond(A) = " + SVD.Cond());
+
+                    Eigenvalue_Problem problem = new Eigenvalue_Problem();
+                    List<double> lyambdaMax = new List<double> ();
+                    lyambdaMax=problem.Find_Eigenvalues_QR_Iterations(A, QR_Decomposition.QR_Algorithm.Householder);
+                    double max = 0;
+                    for (int i = 0; i < Res.M; i++)
+                    {
+                        if (lyambdaMax[i] > max)
+                            max = lyambdaMax[i];
+                    }
                     //число обусловленности
-                      Console.WriteLine("\nCond(A) = " + SVD.Cond());
+                    Console.WriteLine("\nCondInfinity(A) = " + A.Cond_InfinityNorm());
 
-                    //число обусловленности
-                    // Console.WriteLine("\nCond2(A) = " + A.Cond_Square_Matrix_Parallel());
+                    Console.WriteLine("\nCond2(A) = " + Math.Sqrt(max));
 
-                    //число обусловленности
-                    // Console.WriteLine("\nCondInfinity(A) = " + A.Cond_InfinityNorm());
-
-                    //решение СЛАУ
-                    //var X_True = new Vector(A.N);
-                    //for (int i = 0; i < A.N; i++) X_True.Elem[i] = 1.0;
-                    //var F = A * X_True;
-                    //var X = SVD.Start_Solver(F);
-                    //Console.WriteLine("\nResult:");
-                    //foreach (var el in X.Elem) Console.WriteLine(el);
-                    ////норма невязки ||Ax - f||
-                    //Console.WriteLine("\nRelative_Discrepancy: {0}", Tools.Relative_Discrepancy(A, X, F));
+                   // решение СЛАУ
+                    var X_True = new Vector(A.N);
+                    for (int i = 0; i < A.N; i++) X_True.Elem[i] = 1.0;
+                    var F = A * X_True;
+                    var X = SVD.Start_Solver(F);
+                    Console.WriteLine("\nResult:");
+                    foreach (var el in X.Elem) Console.WriteLine(el);
+                    //норма невязки ||Ax - f||
+                    Console.WriteLine("\nRelative_Discrepancy: {0}", Tools.Relative_Discrepancy(A, X, F));
 
 
                 });

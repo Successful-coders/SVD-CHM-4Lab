@@ -22,7 +22,8 @@ namespace Com_Methods
         public SVD(Matrix A)
         {
             //вызов метода, который выполнит построение SVD
-            Start_SVD(A,1);
+            Start_SVD(A,2);
+           // StartSVDExhaustion(A);
         }
 
         //---------------------------------------------------------------------------------------------
@@ -252,7 +253,7 @@ namespace Com_Methods
                                 if (Math.Abs(Down[i] - Sigma.Elem[i + 1][i]) > CONST.EPS)
                                 {
                                     Down[i] = Sigma.Elem[i + 1][i];
-                                    Givens_Transformation.Column_Transformation(Sigma, U, i, i+1);
+                                    Givens_Transformation.Column_Transformation(Sigma, U, i, i);
                                 }
                             }
 
@@ -267,17 +268,16 @@ namespace Com_Methods
                     }
             }
         }
-           
-    
+
+
         //---------------------------------------------------------------------------------------------
         //SVD с исчерпыванием
         //---------------------------------------------------------------------------------------------
         public void StartSVDExhaustion(Matrix A)
         {
 
-            Matrix A0 = A;
+            Matrix Ak = A;
 
-            //инициализация матрицы левых сингулярных векторов 
             U = new Matrix(A.M, A.M);
 
             //матрица сингулярных чисел
@@ -286,25 +286,105 @@ namespace Com_Methods
             //инициализация матрицы правых сингулярных векторов 
             V = new Matrix(A.N, A.N);
 
-            //инициализация матриц для SVD
-            for (int i = 0; i < A.M; i++)
+            //находим aki, bki
+            Vector b = new Vector(Ak.N);
+            Vector a = new Vector(Ak.N);
+
+            b = MaxStringOnNorm(Ak);
+            for (int k = 0; k < Ak.M; k++)
             {
-                for (int j = 0; j < A.N; j++)
+                a = FindVectorak(b, Ak);
+
+                double multak, aLenght, bLenght;
+                aLenght = Math.Sqrt(a * a) ;
+                bLenght = Math.Sqrt(b * b);
+                multak = aLenght * bLenght;
+
+                if (multak < CONST.EPS) break;
+
+                Sigma.Elem[k][k] = multak;
+
+                for (int i = 0; i < Ak.M; i++)
                 {
-                
-                    U.Elem[i][i] = 0.0;
-                    Sigma.Elem[i][j] = 0.0;
-                    V.Elem[i][j] = 0.0;
+                    U.Elem[k][i] = a.Elem[i] / aLenght;
                 }
-            }
-            for (int k = 0; k < A.M; k++)
-            {
+
+                for (int i = 0; i < Ak.N; i++)
+                {
+                    V.Elem[k][i] = b.Elem[i] / bLenght;
+                }
+                Matrix Res = U * Sigma * V.Transpose_Matrix();
+                for (int i = 0; i < Ak.N; i++)
+                {
+                    for (int j = 0; j < Ak.N; j++)
+                    {
+                        Ak.Elem[i][j] = Ak.Elem[i][j] - Res.Elem[i][j];
+                    }
+                }
+                b = FindVectorbk(a, Ak);
 
             }
-            
+            //убираем отрицательные сингулярные числа
+            Check_Singular_Values();
+            //сортируем по возрастанию сингулярные числа
+            Sort_Singular_Values();
         }
 
+        public Vector FindVectorak(Vector bmax, Matrix Ak)
+        {
+            Vector a = new Vector(Ak.M);
+            double Ab, bb;
+            for (int i = 0; i < Ak.M; ++i)
+            {
+                Ab = 0;
+                bb = 0;
+                for (int k = 0; k < Ak.N; ++k)
+                {
+                    Ab += Ak.Elem[i][k] * bmax.Elem[k];
+                    bb += bmax.Elem[k] * bmax.Elem[k];
+                }
+                a.Elem[i] = Ab / bb;
+            }
+            return a;
+        }
+        public Vector FindVectorbk(Vector a, Matrix Ak)
+        {
+            Vector b = new Vector(Ak.N);
+            double aAk, aa;
+            for (int i = 0; i < Ak.N; ++i)
+            {
+                aAk = 0;
+                aa = 0;
+                for (int k = 0; k < Ak.M; ++k)
+                {
+                    aAk += Ak.Elem[k][i] * a.Elem[k];
+                    aa += a.Elem[k] * a.Elem[k];
+                }
+                b.Elem[i] = aAk / aa;
+            }
+            return b;
+        }
 
+        public Vector MaxStringOnNorm(Matrix A)
+        {
+            Vector max = new Vector(A.N);
+            double normMax = 0, normCheck = 0;
+            for (int i = 0; i < A.M; i++)
+            {
+                Vector check = new Vector(A.N);
+                for (int j = 0; j < A.N; j++)
+                {
+                    check.Elem[j] = A.Elem[i][j];
+                }
+                normCheck = check.Norm();
+                if (normCheck > normMax)
+                {
+                    max = check;
+                    normMax = normCheck;
+                }
+            }
+            return max;
+        }
 
         //ранг матрицы
         public int Rank()

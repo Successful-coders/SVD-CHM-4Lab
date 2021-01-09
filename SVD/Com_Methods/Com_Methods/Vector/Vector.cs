@@ -158,5 +158,7 @@ namespace Com_Methods
         {
             for (int i = 0; i < N; i++) Console.WriteLine(Elem[i]);
         }
+
+       
     }
 }
